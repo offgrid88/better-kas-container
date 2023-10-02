@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  better-kas:
+    #image: crops/yocto:ubuntu-20.04-base
+    container_name: better-kas-container
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    #command: /bin/bash
+    tty: true
+    volumes:
+      - ./build:/home/yoctouser/build:rw
+      - ./sources:/home/yoctouser/sources:rw
+      - ./kas:/home/yoctouser/kas:rw
+  
+
+

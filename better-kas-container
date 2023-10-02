@@ -1,0 +1,145 @@
+#!/bin/bash
+############################################################
+# Set variables                                            #
+############################################################
+
+FORCE_GET_KAS="false"
+UBUNTU_VERSION="crops/yocto:ubuntu-20.04-base"
+KAS_BRANCH="master"
+YOCTO_VERSION="honister"
+
+############################################################
+# Help                                                     #
+############################################################
+Help()
+{
+   # Display Help
+   echo "Help output ."
+   echo
+   echo "Syntax: ./better-kas-container [-r|b|h|f]"
+   echo "options:"
+   echo "r     Run the container"
+   echo "b     Build."
+   echo "h     Print this Help."
+   echo "f     Clone kas again even if you have it cloned"
+   echo "v     Print kas version for this script."
+   echo
+}
+
+version ()
+{
+       # Display Versions
+
+   echo  KAS_BRANCH:$KAS_BRANCH
+   echo  UBUNTU_VERSION=$UBUNTU_VERSION
+   echo  YOCTO_VERSION=$YOCTO_VERSION
+}
+
+get_kas ()
+{  
+    if [ -d "./kas" ] 
+    then
+        echo "kas already exists ..." 
+        sleep 2
+    else
+        echo "cloning kas."
+        sleep 1
+        git clone https://github.com/siemens/kas.git
+    fi
+}
+
+
+force_get_kas ()
+{  
+    if [ -d "./kas" ] 
+    then 
+    rm -rf ./kas
+    fi
+    echo "cloning kas."
+    sleep 1
+    git clone https://github.com/siemens/kas.git
+}
+
+#build_function
+build_function()
+{
+set -e
+
+#UID=$(id -u)
+GID=$(id -g)
+docker build --build-arg USER="$USER" \
+    --build-arg UID="$UID" \
+    --build-arg GID="$GID" \
+    --tag "better-kas-container" \
+    --file ./Dockerfile \
+    --progress=plain \
+    .
+}
+
+# run function
+run_function () 
+{
+set -e
+docker run -it \
+    --name "better-kas-container" \
+    --user "${USER}" \
+    --workdir "${PWD}" \
+    --env TERM=xterm-256color \
+    --volume="$HOME":"$HOME" \
+    --detach \
+    "better-kas-container" \
+    /bin/bash
+}
+
+safety_lock () 
+{
+       # Display Warning
+   echo "if you have old build please move it out of this directory "
+   echo
+   echo "then move it back as this scripts removes all dirs"
+   echo "recreate them with the right permissions "
+
+    while true ;do 
+    read -p "If you are sure that you want to continue, write yes " yn
+    case $yn in 
+    [Yy]* ) continue; break ;;
+    [Nn]* ) exit ;;
+    *) echo "write yes or no to exit"
+    esac
+done
+}
+
+############################################################
+############################################################
+# Main program                                             #
+############################################################
+############################################################
+
+#force_get_kas
+#safety_lock
+
+
+
+
+while getopts ":rbhfv" option; do 
+    case $option in 
+    r)
+        run_function
+        exit;;
+    b)
+        build_function
+        exit;;
+    h)
+        Help
+        exit;;          
+    f) 
+        FORCE_GET_KAS="true"
+        echo h
+        echo $FORCE_GET_KAS;;
+    v)
+        version
+        exit;;
+    esac
+done
+
+
