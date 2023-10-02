@@ -28,6 +28,6 @@ RUN apt -y update &&       \
     apt -y upgrade      
  
 
-USER yoctouser
+USER ${USER}
 WORKDIR /home/yoctouser
 
