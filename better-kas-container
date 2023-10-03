@@ -10,12 +10,19 @@ YOCTO_VERSION="honister"
 ############################################################
 # Help                                                     #
 ############################################################
+main()
+{
+echo    " ╔╗ ╔═╗╔╦╗╔╦╗╔═╗╦═╗   ╦╔═╔═╗╔═╗   ╔═╗╔═╗╔╗╔╦╗╔═╗╦╔╗╔╔═╗╦═╗ "
+echo    " ╠╩╗║╣  ║  ║ ║╣ ╠╦╝───╠╩╗╠═╣╚═╗───║  ║ ║║║║║ ╠═╣║║║║║╣ ╠╦╝ "
+echo    " ╚═╝╚═╝ ╩  ╩ ╚═╝╩╚═   ╩ ╩╩ ╩╚═╝   ╚═╝╚═╝╝╚╝╩ ╩ ╩╩╝╚╝╚═╝╩╚═ "
+ Help
+ }                                                                                                                                                              
 Help()
 {
    # Display Help
    echo "Help output ."
    echo
-   echo "Syntax: ./better-kas-container [-r|b|h|f]"
+   echo "Syntax: ./better-kas-container [-r|b|h|v]"
    echo "options:"
    echo "r     Run the container"
    echo "b     Build."
@@ -59,13 +66,12 @@ safety_lock ()
        # Display Warning
    echo "if you have old build please move it out of this directory "
    echo
-   echo "then move it back as this scripts removes all dirs"
-   echo "recreate them with the right permissions "
+   echo "as this scripts may remove them"
 
     while true ;do 
     read -p "If you are sure that you want to continue, write yes " yn
     case $yn in 
-    [Yy]* ) continue; break ;;
+    [Yy]* ) break ;;
     [Nn]* ) exit ;;
     *) echo "write yes or no to exit"
     esac
@@ -78,18 +84,18 @@ done
 ############################################################
 ############################################################
 
-#force_get_kas
-#safety_lock
-
-
+safety_lock
+main
 
 
 while getopts ":rbhfv" option; do 
     case $option in 
     r)
+        safety_lock
         run_function
         exit;;
     b)
+        safety_lock
         build_function
         exit;;
     h)

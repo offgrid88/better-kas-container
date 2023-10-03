@@ -3,7 +3,7 @@ version: "3.8"
 services:
   better-kas-container:
     #image: crops/yocto:ubuntu-20.04-base
-    container_name: kas-container-v1
+    container_name: better-kas-container-v1
     build:
       context: ./
       dockerfile: Dockerfile
