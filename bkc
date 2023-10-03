@@ -52,12 +52,18 @@ do_docker_build() {
 # run function
 do_docker_run() {
 	set -e
+	export BKC_UID=$(id -u)
+	export BKC_GID=$(id -g)
+	export BKC_USER=$USER
 	docker compose up -d
 	docker exec -it better-kas-container-v1 /bin/bash
 }
 
 do_docker_run_for_CI() {
 	set -e
+	export BKC_UID=$(id -u)
+	export BKC_GID=$(id -g)
+	export BKC_USER=$USER
 	docker compose up -d
 }
 

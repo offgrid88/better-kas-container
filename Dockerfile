@@ -23,8 +23,10 @@ RUN apt install -y build-essential git cmake
 
 
 USER root
-RUN apt -y update &&       \
-    apt -y upgrade      
+RUN apt -y update 
+
+# Optional upgrade just for upper version of Yocto 
+#RUN apt -y upgrade      
 
 RUN apt install -y                                             \
     gawk wget git diffstat                                      \
