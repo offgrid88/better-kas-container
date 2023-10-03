@@ -40,8 +40,8 @@ version ()
 }
 
 
-#build_function
-build_function()
+#do_docker_build
+do_docker_build()
 {
 
 set -e
@@ -53,33 +53,19 @@ docker compose build
 }
 
 # run function
-run_function () 
+do_docker_run () 
 {
 set -e
 docker compose up -d 
 docker exec -it better-kas-container-v1 /bin/bash
 }
-run_function_for_CI () 
+
+do_docker_run_for_CI () 
 {
 set -e
 docker compose up -d 
 }
-#safety_lock () 
-#{
-#       # Display Warning
-#   echo "if you have old build please move it out of this directory "
-#   echo
-#   echo "as this scripts may remove them"
-#
-#    while true ;do 
-#    read -p "If you are sure that you want to continue, write yes " yn
-#    case $yn in 
-#    [Yy]* ) break ;;
-#    [Nn]* ) exit ;;
-#    *) echo "write yes or no to exit"
-#    esac
-#done
-#}
+
 
 ############################################################
 ############################################################
@@ -95,14 +81,14 @@ while getopts ":rbchv" option; do
     case $option in 
     r)
 
-        run_function
+        do_docker_run
         exit;;
     b)
 
-        build_function
+        do_docker_build
         exit;;
     c)
-        run_function_for_CI
+        do_docker_run_for_CI
         exit;;
     h)
         Help
