@@ -15,4 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag better-kas-container-v1:$(date +%s)
+      run: ./better-kas-container -b
+    - name: Test run the Docker image
+      run: ./better-kas-container -r
