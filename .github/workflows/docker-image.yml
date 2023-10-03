@@ -8,13 +8,22 @@ on:
 
 jobs:
 
-  build:
+  build_on_ubuntu:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: ./better-kas-container -b
+      run: ./bkc -b
     - name: Test run the Docker image
-      run: ./better-kas-container -c
+      run: ./bkc -c
+  build_on_macos-13:
+    runs-on: macos-13
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: ./bkc -b
+    - name: Test run the Docker image
+      run: ./bkc -c
