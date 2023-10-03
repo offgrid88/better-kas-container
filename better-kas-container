@@ -61,22 +61,22 @@ docker compose up -d
 docker exec -it kas-container-v1 /bin/bash
 }
 
-safety_lock () 
-{
-       # Display Warning
-   echo "if you have old build please move it out of this directory "
-   echo
-   echo "as this scripts may remove them"
-
-    while true ;do 
-    read -p "If you are sure that you want to continue, write yes " yn
-    case $yn in 
-    [Yy]* ) break ;;
-    [Nn]* ) exit ;;
-    *) echo "write yes or no to exit"
-    esac
-done
-}
+#safety_lock () 
+#{
+#       # Display Warning
+#   echo "if you have old build please move it out of this directory "
+#   echo
+#   echo "as this scripts may remove them"
+#
+#    while true ;do 
+#    read -p "If you are sure that you want to continue, write yes " yn
+#    case $yn in 
+#    [Yy]* ) break ;;
+#    [Nn]* ) exit ;;
+#    *) echo "write yes or no to exit"
+#    esac
+#done
+#}
 
 ############################################################
 ############################################################
@@ -84,18 +84,18 @@ done
 ############################################################
 ############################################################
 
-safety_lock
+
 main
 
 
 while getopts ":rbhfv" option; do 
     case $option in 
     r)
-        safety_lock
+
         run_function
         exit;;
     b)
-        safety_lock
+
         build_function
         exit;;
     h)
