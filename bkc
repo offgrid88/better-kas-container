@@ -19,7 +19,7 @@ Help() {
 	# Display Help
 	echo "Help output ."
 	echo
-	echo "Syntax: ./better-kas-container [-r|b|h|v]"
+	echo "Syntax: ./bkc [-r|b|h|v]"
 	echo "options:"
 	echo "r     Run the container"
 	echo "b     Build."
