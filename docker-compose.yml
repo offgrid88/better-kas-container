@@ -8,9 +8,9 @@ services:
       context: ./
       dockerfile: Dockerfile
       args :
-        - USER=$USER
-        - UID=$UID
-        - GID=$GID
+        - BKC_USER=$BKC_USER
+        - BKC_UID=$BKC_UID
+        - BKC_GID=$BKC_GID
     command: /bin/bash
     tty: true
     user: '${USER}'

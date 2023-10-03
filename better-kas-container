@@ -45,9 +45,11 @@ do_docker_build()
 {
 
 set -e
-sed -i "s/USER.*/USER=$USER/g" .env
-sed -i "s/UID.*/UID=$UID/g" .env
-sed -i "s/GID.*/GID=$(id -g)/g" .env
+
+export BKC_UID=$(id -u)
+export BKC_GID=$(id -g)
+export BKC_USER=$USER
+
 docker compose build
 
 }

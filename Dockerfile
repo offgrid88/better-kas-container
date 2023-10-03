@@ -1,18 +1,19 @@
 FROM crops/yocto:ubuntu-20.04-base
-# TODO get current user UID and GID 
-ARG USER
-ARG UID
-ARG GID
+
+ARG BKC_USER
+ARG BKC_UID
+ARG BKC_GID
+
 USER root
 
 # create a new user with same UID & PID but no password
-RUN groupadd --gid ${GID} ${USER} && \
-    useradd --create-home ${USER} --uid=${UID} --gid=${GID} --groups root && \
-    passwd --delete ${USER}
+RUN groupadd --gid ${BKC_GID} ${BKC_USER} && \
+    useradd --create-home ${BKC_USER} --uid=${BKC_UID} --gid=${BKC_GID} --groups root && \
+    passwd --delete ${BKC_USER}
 # add user to the sudo group and set sudo group to no passoword
 RUN apt update && \
     apt install -y sudo && \
-    adduser ${USER} sudo && \
+    adduser ${BKC_USER} sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # prevent tzdata to ask for configuration
@@ -35,15 +36,15 @@ RUN apt install -y                                             \
 
 
 # setup default user when enter the container
-USER ${UID}:${GID}
-WORKDIR /home/${USER}
+USER ${BKC_UID}:${BKC_GID}
+WORKDIR /home/${BKC_USER}
 
-RUN cd /home/${USER}                               &&           \
+RUN cd /home/${BKC_USER}                               &&           \
     rm -rf ./kas                                   &&            \
     git clone https://github.com/siemens/kas.git   &&             \
     cd ./kas                                        
 
 USER root
 
-RUN cd /home/${USER}/kas && \
+RUN cd /home/${BKC_USER}/kas && \
     pip3 install .
