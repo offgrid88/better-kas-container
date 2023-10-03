@@ -17,4 +17,4 @@ jobs:
     - name: Build the Docker image
       run: ./better-kas-container -b
     - name: Test run the Docker image
-      run: ./better-kas-container -r
+      run: ./better-kas-container -c

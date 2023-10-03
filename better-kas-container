@@ -15,7 +15,6 @@ main()
 echo    " ╔╗ ╔═╗╔╦╗╔╦╗╔═╗╦═╗   ╦╔═╔═╗╔═╗   ╔═╗╔═╗╔╗╔╦╗╔═╗╦╔╗╔╔═╗╦═╗ "
 echo    " ╠╩╗║╣  ║  ║ ║╣ ╠╦╝───╠╩╗╠═╣╚═╗───║  ║ ║║║║║ ╠═╣║║║║║╣ ╠╦╝ "
 echo    " ╚═╝╚═╝ ╩  ╩ ╚═╝╩╚═   ╩ ╩╩ ╩╚═╝   ╚═╝╚═╝╝╚╝╩ ╩ ╩╩╝╚╝╚═╝╩╚═ "
- Help
  }                                                                                                                                                              
 Help()
 {
@@ -60,7 +59,11 @@ set -e
 docker compose up -d 
 docker exec -it better-kas-container-v1 /bin/bash
 }
-
+run_function_for_CI () 
+{
+set -e
+docker compose up -d 
+}
 #safety_lock () 
 #{
 #       # Display Warning
@@ -88,7 +91,7 @@ docker exec -it better-kas-container-v1 /bin/bash
 main
 
 
-while getopts ":rbhfv" option; do 
+while getopts ":rbchv" option; do 
     case $option in 
     r)
 
@@ -98,11 +101,17 @@ while getopts ":rbhfv" option; do
 
         build_function
         exit;;
+    c)
+        run_function_for_CI
+        exit;;
     h)
         Help
         exit;;          
     v)
         version
+        exit;;
+    "")
+        main
         exit;;
     esac
 done
