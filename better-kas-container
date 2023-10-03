@@ -3,7 +3,6 @@
 # Set variables                                            #
 ############################################################
 
-FORCE_GET_KAS="false"
 UBUNTU_VERSION="crops/yocto:ubuntu-20.04-base"
 KAS_BRANCH="master"
 YOCTO_VERSION="honister"
@@ -21,7 +20,6 @@ Help()
    echo "r     Run the container"
    echo "b     Build."
    echo "h     Print this Help."
-   echo "f     Clone kas again even if you have it cloned"
    echo "v     Print kas version for this script."
    echo
 }
@@ -35,60 +33,25 @@ version ()
    echo  YOCTO_VERSION=$YOCTO_VERSION
 }
 
-get_kas ()
-{  
-    if [ -d "./kas" ] 
-    then
-        echo "kas already exists ..." 
-        sleep 2
-    else
-        echo "cloning kas."
-        sleep 1
-        git clone https://github.com/siemens/kas.git
-    fi
-}
-
-
-force_get_kas ()
-{  
-    if [ -d "./kas" ] 
-    then 
-    rm -rf ./kas
-    fi
-    echo "cloning kas."
-    sleep 1
-    git clone https://github.com/siemens/kas.git
-}
 
 #build_function
 build_function()
 {
-set -e
 
-#UID=$(id -u)
-GID=$(id -g)
-docker build --build-arg USER="$USER" \
-    --build-arg UID="$UID" \
-    --build-arg GID="$GID" \
-    --tag "better-kas-container" \
-    --file ./Dockerfile \
-    --progress=plain \
-    .
+set -e
+sed -i "s/USER.*/USER=$USER/g" .env
+sed -i "s/UID.*/UID=$UID/g" .env
+sed -i "s/GID.*/GID=$(id -g)/g" .env
+docker compose build
+
 }
 
 # run function
 run_function () 
 {
 set -e
-docker run -it \
-    --name "better-kas-container" \
-    --user "${USER}" \
-    --workdir "${PWD}" \
-    --env TERM=xterm-256color \
-    --volume="$HOME":"$HOME" \
-    --detach \
-    "better-kas-container" \
-    /bin/bash
+docker compose up -d 
+docker exec -it kas-container-v1 /bin/bash
 }
 
 safety_lock () 
@@ -132,10 +95,6 @@ while getopts ":rbhfv" option; do
     h)
         Help
         exit;;          
-    f) 
-        FORCE_GET_KAS="true"
-        echo h
-        echo $FORCE_GET_KAS;;
     v)
         version
         exit;;
