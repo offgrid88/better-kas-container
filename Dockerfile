@@ -14,17 +14,8 @@ RUN apt update && \
     apt install -y sudo && \
     adduser ${USER} sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# prevent tzdata to ask for configuration
-RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt -y install tzdata
-RUN apt install -y build-essential git cmake
-
-
-
-USER root
-RUN apt -y update &&       \
-    apt -y upgrade      
-
+    
+# Install yocto related packages
 RUN apt install -y                                             \
     gawk wget git diffstat                                      \
     unzip texinfo gcc build-essential                            \
@@ -33,6 +24,9 @@ RUN apt install -y                                             \
     python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev           \
     pylint3 xterm python3-subunit mesa-common-dev zstd liblz4-tool   
 
+# prevent tzdata to ask for configuration
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt -y install tzdata
+RUN apt install -y build-essential git cmake
 
 # setup default user when enter the container
 USER ${UID}:${GID}
