@@ -1,0 +1,101 @@
+#!/bin/bash
+############################################################
+# Set variables                                            #
+############################################################
+
+UBUNTU_VERSION="crops/yocto:ubuntu-20.04-base"
+KAS_BRANCH="master"
+YOCTO_VERSION="honister"
+
+############################################################
+# Help                                                     #
+############################################################
+main() {
+	echo " ╔╗ ╔═╗╔╦╗╔╦╗╔═╗╦═╗   ╦╔═╔═╗╔═╗   ╔═╗╔═╗╔╗╔╦╗╔═╗╦╔╗╔╔═╗╦═╗ "
+	echo " ╠╩╗║╣  ║  ║ ║╣ ╠╦╝───╠╩╗╠═╣╚═╗───║  ║ ║║║║║ ╠═╣║║║║║╣ ╠╦╝ "
+	echo " ╚═╝╚═╝ ╩  ╩ ╚═╝╩╚═   ╩ ╩╩ ╩╚═╝   ╚═╝╚═╝╝╚╝╩ ╩ ╩╩╝╚╝╚═╝╩╚═ "
+}
+Help() {
+	# Display Help
+	echo "Help output ."
+	echo
+	echo "Syntax: ./better-kas-container [-r|b|h|v]"
+	echo "options:"
+	echo "r     Run the container"
+	echo "b     Build."
+	echo "h     Print this Help."
+	echo "v     Print kas version for this script."
+	echo
+}
+
+version() {
+	# Display Versions
+
+	echo KAS_BRANCH:$KAS_BRANCH
+	echo UBUNTU_VERSION=$UBUNTU_VERSION
+	echo YOCTO_VERSION=$YOCTO_VERSION
+}
+
+#do_docker_build
+do_docker_build() {
+
+	set -e
+
+	export BKC_UID=$(id -u)
+	export BKC_GID=$(id -g)
+	export BKC_USER=$USER
+
+	docker compose build
+
+}
+
+# run function
+do_docker_run() {
+	set -e
+	docker compose up -d
+	docker exec -it better-kas-container-v1 /bin/bash
+}
+
+do_docker_run_for_CI() {
+	set -e
+	docker compose up -d
+}
+
+############################################################
+############################################################
+# Main program                                             #
+############################################################
+############################################################
+
+main
+
+while getopts ":rbchv" option; do
+	case $option in
+	r)
+
+		do_docker_run
+		exit
+		;;
+	b)
+
+		do_docker_build
+		exit
+		;;
+	c)
+		do_docker_run_for_CI
+		exit
+		;;
+	h)
+		Help
+		exit
+		;;
+	v)
+		version
+		exit
+		;;
+	"")
+		main
+		exit
+		;;
+	esac
+done

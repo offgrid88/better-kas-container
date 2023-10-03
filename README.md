@@ -42,7 +42,7 @@ To run the script and start the better-kas-container, use the following command:
 ./better-kas-container 
 ```
 
-Syntax: ./better-kas-container [-r|b|h|v]
+Syntax: ./bkc [-r|b|h|v]
 options:
 
 r     Run the container
@@ -60,13 +60,13 @@ Here are a few examples to help you understand how to use the script:
 
 1. build the container
 ```
-./better-kas-container -b
+./bkc -b
 ```
 
 2. Run the better-kas-container and start a shell:
 
 ```
-./better-kas-container -r
+./bkc -r
 ```
 ------------------
 
