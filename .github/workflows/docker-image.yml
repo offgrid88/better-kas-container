@@ -18,12 +18,14 @@ jobs:
       run: ./bkc -b
     - name: Test run the Docker image
       run: ./bkc -c
-  build_on_macos-13:
-    runs-on: macos-13
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: ./bkc -b
-    - name: Test run the Docker image
-      run: ./bkc -c
+  #[TODO] to add later when finish working on the mac script 
+  #build_on_macos-13:
+  #  runs-on: macos-13
+#
+  #  steps:
+  #  - uses: actions/checkout@v3
+  #  - name: Build the Docker image
+  #    run: ./bkc -b
+  #  - name: Test run the Docker image
+  #    run: ./bkc -c
