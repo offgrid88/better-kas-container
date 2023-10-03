@@ -58,7 +58,7 @@ run_function ()
 {
 set -e
 docker compose up -d 
-docker exec -it kas-container-v1 /bin/bash
+docker exec -it better-kas-container-v1 /bin/bash
 }
 
 #safety_lock () 
