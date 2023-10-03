@@ -41,7 +41,7 @@ cd better-kas-container
 
 To run the script and start the better-kas-container, use the following command:
 ```
-./better-kas-container 
+./bkc
 ```
 
 Syntax: ./bkc [-r|b|h|v]
