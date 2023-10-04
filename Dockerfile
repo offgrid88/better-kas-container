@@ -1,33 +1,52 @@
-FROM crops/yocto:ubuntu-20.04-base
-# TODO get current user UID and GID 
-ARG USER=bks_user
-ARG UID=1001
-ARG GID=1001
+FROM ubuntu:jammy
+
+ARG BKC_USER
+ARG BKC_UID
+ARG BKC_GID
+
 USER root
+
 # create a new user with same UID & PID but no password
-RUN groupadd --gid ${GID} ${USER} && \
-    useradd --create-home ${USER} --uid=${UID} --gid=${GID} --groups root && \
-    passwd --delete ${USER}
+RUN groupadd --gid ${BKC_GID} ${BKC_USER} && \
+    useradd --create-home ${BKC_USER} --uid=${BKC_UID} --gid=${BKC_GID} --groups root && \
+    passwd --delete ${BKC_USER}
 # add user to the sudo group and set sudo group to no passoword
 RUN apt update && \
     apt install -y sudo && \
-    adduser ${USER} sudo && \
+    adduser ${BKC_USER} sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # prevent tzdata to ask for configuration
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt -y install tzdata
 RUN apt install -y build-essential git cmake
 
-# setup default user when enter the container
-USER ${UID}:${GID}
-WORKDIR /home/${USER}
 
 
 USER root
-RUN apt -y update &&       \
-    apt -y upgrade      
- 
+RUN apt -y update 
 
-USER ${USER}
-WORKDIR /home/yoctouser
+# Optional upgrade just for upper version of Yocto 
+#RUN apt -y upgrade      
 
+RUN apt install -y                                                  \
+    gawk wget git diffstat locales                                   \
+    unzip texinfo gcc build-essential                                 \
+    chrpath socat cpio python3 python3-pip                             \
+    python3-pexpect xz-utils debianutils iputils-ping                   \
+    python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev                \
+    pylint xterm python3-subunit mesa-common-dev zstd liblz4-tool file && \
+    locale-gen en_US.UTF-8
+
+# setup default user when enter the container
+USER ${BKC_UID}:${BKC_GID}
+WORKDIR /home/${BKC_USER}
+
+RUN cd /home/${BKC_USER}                               &&           \
+    rm -rf ./kas                                   &&            \
+    git clone https://github.com/siemens/kas.git   &&             \
+    cd ./kas                                        
+
+USER root
+
+RUN cd /home/${BKC_USER}/kas && \
+    pip3 install .

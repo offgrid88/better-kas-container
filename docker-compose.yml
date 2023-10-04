@@ -1,18 +1,18 @@
 version: "3.8"
 
 services:
-  better-kas:
+  better-kas-container:
     #image: crops/yocto:ubuntu-20.04-base
-    container_name: better-kas-container
+    container_name: better-kas-container-v1
     build:
       context: ./
       dockerfile: Dockerfile
-    #command: /bin/bash
+      args :
+        - BKC_USER=$BKC_USER
+        - BKC_UID=$BKC_UID
+        - BKC_GID=$BKC_GID
+    command: /bin/bash
     tty: true
+    user: '${USER}'
     volumes:
-      - ./build:/home/yoctouser/build:rw
-      - ./sources:/home/yoctouser/sources:rw
-      - ./kas:/home/yoctouser/kas:rw
-  
-
-
+      - $HOME:$HOME
