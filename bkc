@@ -79,6 +79,9 @@ do_seperate_user() {
 sudo -i -u bkc-dev bash << EOF
 	echo "In bkc-dev"
 	whoami
+  sudo usermod -aG docker $USER
+  cd $HOME
+  newgrp docker
 	-c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 EOF
 	echo "Out of bkc-dev"
