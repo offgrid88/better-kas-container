@@ -10,6 +10,8 @@
 
 ![](https://github.com/offgrid88/better-kas-container/actions/workflows/Build_on_ubuntu.yml/badge.svg?event=push)
 
+![](https://github.com/offgrid88/better-kas-container/actions/workflows/Build_on_Archlinux.yml/badge.svg?event=push)
+
 better-kas-container is a Docker container script that provides a convenient environment for compiling Yocto images on any operating system. It is based on the crops/yocto:ubuntu-20.04-base image and offers several options to customize the build process. It has kas the Setup tool for bitbake based projects.
 
 ## Features:
