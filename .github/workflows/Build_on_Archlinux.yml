@@ -1,0 +1,19 @@
+name: Build on Archlinux
+on:
+  push:
+    branches: [ "archlinux-honister" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build_on_archlinux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build on Archlinux
+      run:  docker compose -f ./archlinux_ci/docker-compose.yml build
+    - name: Test run the Archlinux  Docker image
+      run:  docker compose -f ./archlinux_ci/docker-compose.yml up -d

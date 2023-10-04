@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  archlinux:
+    build: .
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /run/user/1000/gdm/Xauthority:/home/ci-user/.Xauthority
+    network_mode: host
+    restart: always
+    container_name: 'arch_gui'
+    privileged: true

@@ -49,16 +49,16 @@ do_seperate_user() {
 	echo -e "${RED}       This is a hackish way of making a stable isolated environment		     ${ENDCOLOR}"
 	echo -e "${GREEN}      But it is safe you can always delete the new created user                 ${ENDCOLOR}"
 	sleep 1s
-	#Finding the next available UID and/or GID and increment it by one 
- 	BKC_UID=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }')
- 	BKC_GID=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }')
+	#Creating new user and grabbing the uid/gid
+ 	sudo groupadd -g ${BKC_GID} ${BKC_GROUP}
+	sudo useradd --create-home bkc-dev --uid=${BKC_UID} --gid=${BKC_GID} --groups root
 	export BKC_USER=bkc-dev
 	export BKC_GROUP=bkc-dev
 	echo -e "-->  ${BLUE} Setting user id:${BKC_UID} ${ENDCOLOR}"
 	echo -e "-->  ${BLUE} Setting group id:${BKC_GID} ${ENDCOLOR}"
 	echo -e "-->  ${BLUE} Setting  username:${BKC_USER} ${ENDCOLOR}"
-	sudo groupadd -g ${BKC_GID} ${BKC_GROUP}
-	sudo useradd --create-home bkc-dev --uid=${BKC_UID} --gid=${BKC_GID} --groups root
+
+
 
  
 	#
