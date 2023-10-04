@@ -78,6 +78,8 @@ Here are a few examples to help you understand how to use the script:
 
 - [ ] Add function to create specific user with right settings for only compilation purposes, for OSes with weird permessions settings
 - [ ] Change image base to ubuntu not crops
+- [ ] Adding user to docker group 
+- [ ] givingoption for users to mount different directory
 
 The better-kas-container script simplifies the process of compiling Yocto images by providing a Docker container with a pre-configured environment. By utilizing the available options, you can easily build and customize Yocto images to meet your specific requirements.
 
