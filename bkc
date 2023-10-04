@@ -21,7 +21,6 @@ main() {
 Help() {
 	# Display Help
 	echo "Help output ."
-	echo
 	echo "Syntax: ./bkc [-r|b|h|v]"
 	echo "options:"
 	echo "r     Run the container"
@@ -50,21 +49,47 @@ do_seperate_user() {
 	echo -e "${GREEN}      But it is safe you can always delete the new created user                 ${ENDCOLOR}"
 	sleep 1s
 	#Creating new user and grabbing the uid/gid
- 	sudo groupadd -g ${BKC_GID} ${BKC_GROUP}
-	sudo useradd --create-home bkc-dev --uid=${BKC_UID} --gid=${BKC_GID} --groups root
 	export BKC_USER=bkc-dev
 	export BKC_GROUP=bkc-dev
+	
+	#group check
+	if [ $(getent group ${BKC_GROUP} ) ]
+	then
+		echo -e "-->  ${BLUE} Group exists skipping ...:${BKC_GROUP} ${ENDCOLOR}"
+		sudo userdel bkc-dev
+		sudo groupdel bkc-dev
+		#sudo rm -rf /home/bkc-dev
+	fi
+	
+
+	#user check
+	if [ $(id -u ${BKC_USER})  ]
+	then 
+		echo -e "-->  ${BLUE} User exists skipping ...:${BKC_USER} ${ENDCOLOR}"
+	else
+	sudo useradd -m bkc-dev 
+	sudo usermod -aG bkc-dev bkc-dev
+	sudo usermod --shell /bin/bash bkc-dev
+	sudo passwd bkc-dev
+	echo -e "-->  ${BLUE} user created ${ENDCOLOR}"
+
+	fi
+	export BKC_GID=$(id -g $BKC_GROUP )
+	export BKC_UID=$(id -u $BKC_USER )
+sudo -i -u bkc-dev bash << EOF
+	echo "In bkc-dev"
+	whoami
+	-c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+EOF
+	echo "Out of bkc-dev"
+	
 	echo -e "-->  ${BLUE} Setting user id:${BKC_UID} ${ENDCOLOR}"
 	echo -e "-->  ${BLUE} Setting group id:${BKC_GID} ${ENDCOLOR}"
 	echo -e "-->  ${BLUE} Setting  username:${BKC_USER} ${ENDCOLOR}"
-
-
-
- 
-	#
-	#useradd -m -G wheel -s /bin/bash username
-
+	echo -e "-->  ${BLUE} Now use 'su bkc-dev' command to switch  ${ENDCOLOR}"
+	echo -e "-->  ${BLUE}    user and use the script as normal	  ${ENDCOLOR}"
 }
+
 #do_docker_build
 do_docker_build() {
 
