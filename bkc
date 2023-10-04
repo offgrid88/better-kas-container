@@ -6,14 +6,17 @@
 UBUNTU_VERSION="crops/yocto:ubuntu-20.04-base"
 KAS_BRANCH="master"
 YOCTO_VERSION="honister"
-
+RED="\e[31m"
+BLUE="\e[1;34m"
+GREEN="\e[32m"
+ENDCOLOR="\e[0m"
 ############################################################
 # Help                                                     #
 ############################################################
 main() {
-	echo " ╔╗ ╔═╗╔╦╗╔╦╗╔═╗╦═╗   ╦╔═╔═╗╔═╗   ╔═╗╔═╗╔╗╔╦╗╔═╗╦╔╗╔╔═╗╦═╗ "
-	echo " ╠╩╗║╣  ║  ║ ║╣ ╠╦╝───╠╩╗╠═╣╚═╗───║  ║ ║║║║║ ╠═╣║║║║║╣ ╠╦╝ "
-	echo " ╚═╝╚═╝ ╩  ╩ ╚═╝╩╚═   ╩ ╩╩ ╩╚═╝   ╚═╝╚═╝╝╚╝╩ ╩ ╩╩╝╚╝╚═╝╩╚═ "
+	echo -e "${BLUE} ╔╗ ╔═╗╔╦╗╔╦╗╔═╗╦═╗   ╦╔═╔═╗╔═╗   ╔═╗╔═╗╔╗╔╦╗╔═╗╦╔╗╔╔═╗╦═╗ ${ENDCOLOR} "
+	echo -e "${GREEN} ╠╩╗║╣  ║  ║ ║╣ ╠╦╝───╠╩╗╠═╣╚═╗───║  ║ ║║║║║ ╠═╣║║║║║╣ ╠╦╝ ${ENDCOLOR}"
+	echo -e "${BLUE} ╚═╝╚═╝ ╩  ╩ ╚═╝╩╚═   ╩ ╩╩ ╩╚═╝   ╚═╝╚═╝╝╚╝╩ ╩ ╩╩╝╚╝╚═╝╩╚═  ${ENDCOLOR}"
 }
 Help() {
 	# Display Help
@@ -22,9 +25,11 @@ Help() {
 	echo "Syntax: ./bkc [-r|b|h|v]"
 	echo "options:"
 	echo "r     Run the container"
+	echo "s     Stop the container"
 	echo "b     Build."
 	echo "h     Print this Help."
 	echo "v     Print kas version for this script."
+echo -e  "x ${RED}    If all fail use the -x option.${ENDCOLOOR}"
 	echo
 }
 
@@ -35,20 +40,58 @@ version() {
 	echo UBUNTU_VERSION=$UBUNTU_VERSION
 	echo YOCTO_VERSION=$YOCTO_VERSION
 }
+#do_docker_build
+do_seperate_user() {
 
+	echo -e "${BLUE}  After this step you will have a new user for Yocto build system.           ${ENDCOLOR} "
+	echo -e "${BLUE}       This part of BKC is for users who faced problems with                ${ENDCOLOR}"
+	echo -e "${BLUE}  permissions in their systems or just want a seperate place for Yocto       ${ENDCOLOR}"
+	echo -e "${RED}       This is a hackish way of making a stable isolated environment		     ${ENDCOLOR}"
+	echo -e "${GREEN}      But it is safe you can always delete the new created user                 ${ENDCOLOR}"
+	sleep 1s
+	#Finding the next available UID and/or GID and increment it by one 
+ 	BKC_UID=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }')
+ 	BKC_GID=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }')
+	export BKC_USER=bkc-dev
+	export BKC_GROUP=bkc-dev
+	echo -e "-->  ${BLUE} Setting user id:${BKC_UID} ${ENDCOLOR}"
+	echo -e "-->  ${BLUE} Setting group id:${BKC_GID} ${ENDCOLOR}"
+	echo -e "-->  ${BLUE} Setting  username:${BKC_USER} ${ENDCOLOR}"
+	sudo groupadd -g ${BKC_GID} ${BKC_GROUP}
+	sudo useradd --create-home bkc-dev --uid=${BKC_UID} --gid=${BKC_GID} --groups root
+
+ 
+	#
+	#useradd -m -G wheel -s /bin/bash username
+
+}
 #do_docker_build
 do_docker_build() {
 
-	set -e
 
 	export BKC_UID=$(id -u)
 	export BKC_GID=$(id -g)
 	export BKC_USER=$USER
-
+	echo -e "-->  ${BLUE} Setting user id:${BKC_UID} ${ENDCOLOR}"
+	echo -e "-->  ${BLUE} Setting group id:${BKC_GID} ${ENDCOLOR}"
+	echo -e "-->  ${BLUE} Setting  username:${BKC_USER} ${ENDCOLOR}" 
 	docker compose build
 
 }
+do_docker_stop() {
 
+
+	export BKC_UID=$(id -u)
+	export BKC_GID=$(id -g)
+	export BKC_USER=$USER
+	echo -e "-->  ${BLUE} Setting user id:${BKC_UID} ${ENDCOLOR}"
+	echo -e "-->  ${BLUE} Setting group id:${BKC_GID} ${ENDCOLOR}"
+	echo -e "-->  ${BLUE} Setting  username:${BKC_USER} ${ENDCOLOR}" 
+	docker compose down -v
+	echo -e "-->  ${GREEN} KBC stopped ... ${ENDCOLOR}" 
+	sleep 1s
+
+}
 # run function
 do_docker_run() {
 	set -e
@@ -75,7 +118,7 @@ do_docker_run_for_CI() {
 
 main
 
-while getopts ":rbchv" option; do
+while getopts ":rbschvx" option; do
 	case $option in
 	r)
 
@@ -85,6 +128,11 @@ while getopts ":rbchv" option; do
 	b)
 
 		do_docker_build
+		exit
+		;;
+	s)
+
+		do_docker_stop
 		exit
 		;;
 	c)
@@ -97,6 +145,10 @@ while getopts ":rbchv" option; do
 		;;
 	v)
 		version
+		exit
+		;;
+	x)
+		do_seperate_user
 		exit
 		;;
 	"")

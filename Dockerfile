@@ -1,4 +1,4 @@
-FROM crops/yocto:ubuntu-20.04-base
+FROM ubuntu:jammy
 
 ARG BKC_USER
 ARG BKC_UID
@@ -28,14 +28,14 @@ RUN apt -y update
 # Optional upgrade just for upper version of Yocto 
 #RUN apt -y upgrade      
 
-RUN apt install -y                                             \
-    gawk wget git diffstat                                      \
-    unzip texinfo gcc build-essential                            \
-    chrpath socat cpio python3 python3-pip                        \
-    python3-pexpect xz-utils debianutils iputils-ping              \
-    python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev           \
-    pylint3 xterm python3-subunit mesa-common-dev zstd liblz4-tool   
-
+RUN apt install -y                                                  \
+    gawk wget git diffstat locales                                   \
+    unzip texinfo gcc build-essential                                 \
+    chrpath socat cpio python3 python3-pip                             \
+    python3-pexpect xz-utils debianutils iputils-ping                   \
+    python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev                \
+    pylint xterm python3-subunit mesa-common-dev zstd liblz4-tool file && \
+    locale-gen en_US.UTF-8
 
 # setup default user when enter the container
 USER ${BKC_UID}:${BKC_GID}
