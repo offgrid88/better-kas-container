@@ -1,11 +1,9 @@
 
 
 ------------------
- <pre>
- ╔╗ ╔═╗╔╦╗╔╦╗╔═╗╦═╗   ╦╔═╔═╗╔═╗   ╔═╗╔═╗╔╗╔╦╗╔═╗╦╔╗╔╔═╗╦═╗ 
- ╠╩╗║╣  ║  ║ ║╣ ╠╦╝───╠╩╗╠═╣╚═╗───║  ║ ║║║║║ ╠═╣║║║║║╣ ╠╦╝ 
- ╚═╝╚═╝ ╩  ╩ ╚═╝╩╚═   ╩ ╩╩ ╩╚═╝   ╚═╝╚═╝╝╚╝╩ ╩ ╩╩╝╚╝╚═╝╩╚═ 
-</pre>
+<p align=center>
+ <img src="https://raw.githubusercontent.com/offgrid88/better-kas-container/main/pics/logo.png">
+</p>
 ------------------
 
 ![](https://github.com/offgrid88/better-kas-container/actions/workflows/Build_on_ubuntu.yml/badge.svg?event=push)
